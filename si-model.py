@@ -44,7 +44,7 @@ A_importance_weighted = A_importance/np.sum(A_importance, axis = 1).reshape((SOU
 
 for t in range(1, TIME_STEPS-2):
     #print('actual state', S[t])
-    prediction = p*np.dot(A_importance_weighted, S[t])
+    prediction = p*np.dot(A_weighted, S[t])
     #print('prediction', prediction)
     probabilities = (1-S[t])*(np.abs(prediction - (1 - S[t+1])))
     #print(probabilities)

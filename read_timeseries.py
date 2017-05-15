@@ -6,13 +6,14 @@ import csv
 G = nx.read_gexf('network.gexf')
 
 indices = dict([(name, i) for i, name in enumerate(G.nodes())])
-max_interval = 16000
+max_interval = 20000
 
 states = np.zeros((500, max_interval))
 
-start_dt = datetime.datetime(2014, 4, 30, 0, 0, 0)
+start_dt = datetime.datetime(2015, 4, 30, 0, 0, 0)
 
 unfound = []
+node_list = []
 with open('stories_mentioning_altright.csv', 'rt') as csvfile:
     reader = csv.reader(csvfile, delimiter=',', quotechar='\"')
     for row in reader:
@@ -25,6 +26,9 @@ with open('stories_mentioning_altright.csv', 'rt') as csvfile:
         hour_since_start = diff.days * 24 + int(diff.seconds / 3600)
         #print(hour_since_start)
         if name in indices and hour_since_start >= 0:
+            node_list.append(name)
+            if hour_since_start > 20000:
+                print(hour_since_start, dt, row)
             states[indices[name],hour_since_start:] = 1
 
 A = nx.to_numpy_matrix(G)
