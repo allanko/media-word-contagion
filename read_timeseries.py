@@ -6,11 +6,11 @@ import csv
 G = nx.read_gexf('network.gexf')
 
 indices = dict([(name, i) for i, name in enumerate(G.nodes())])
-max_interval = 20000
+max_interval = 24 * 7
 
 states = np.zeros((500, max_interval))
 
-start_dt = datetime.datetime(2015, 4, 30, 0, 0, 0)
+start_dt = datetime.datetime(2016, 8, 21, 0, 0, 0)
 
 unfound = []
 node_list = []
@@ -26,6 +26,8 @@ with open('stories_mentioning_altright.csv', 'rt') as csvfile:
         hour_since_start = diff.days * 24 + int(diff.seconds / 3600)
         #print(hour_since_start)
         if name in indices and hour_since_start >= 0:
+            if 482 * 24 < hour_since_start < 485 * 24:
+                print(row)
             node_list.append(name)
             if hour_since_start > 20000:
                 print(hour_since_start, dt, row)
@@ -33,4 +35,4 @@ with open('stories_mentioning_altright.csv', 'rt') as csvfile:
 
 A = nx.to_numpy_matrix(G)
 np.save('adjacency', A.transpose())
-np.save('states', states.transpose())
+np.save('states_clintonspeech', states.transpose())
