@@ -1,0 +1,3 @@
+[mediacloud]
+key = YOUR_MEDIACLOUD_API_KEY
+topic_id = TOPIC_NUMBER

@@ -1,0 +1,4 @@
+*.pyc
+app.config
+.ipynb_checkpoints*
+
