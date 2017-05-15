@@ -6,7 +6,7 @@ import csv
 G = nx.read_gexf('network.gexf')
 
 indices = dict([(name, i) for i, name in enumerate(G.nodes())])
-max_interval = 1000
+max_interval = 16000
 
 states = np.zeros((500, max_interval))
 
@@ -20,7 +20,7 @@ with open('stories_mentioning_altright.csv', 'rt') as csvfile:
             continue
         name = row[1]
         dt = datetime.datetime.strptime(row[5], '%Y-%m-%d %H:%M:%S')
-        minute_since_start = int((dt - start_dt).seconds / 60)
+        minute_since_start = int((dt - start_dt).seconds / 3600)
         if name in indices:
             states[indices[name],minute_since_start:] = 1
 
