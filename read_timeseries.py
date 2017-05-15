@@ -10,7 +10,7 @@ max_interval = 16000
 
 states = np.zeros((500, max_interval))
 
-start_dt = datetime.datetime(2015, 4, 1, 0, 0, 0)
+start_dt = datetime.datetime(2014, 4, 30, 0, 0, 0)
 
 unfound = []
 with open('stories_mentioning_altright.csv', 'rt') as csvfile:
@@ -20,9 +20,12 @@ with open('stories_mentioning_altright.csv', 'rt') as csvfile:
             continue
         name = row[1]
         dt = datetime.datetime.strptime(row[5], '%Y-%m-%d %H:%M:%S')
-        minute_since_start = int((dt - start_dt).seconds / 3600)
-        if name in indices:
-            states[indices[name],minute_since_start:] = 1
+        diff = dt - start_dt
+        #print(dt)
+        hour_since_start = diff.days * 24 + int(diff.seconds / 3600)
+        #print(hour_since_start)
+        if name in indices and hour_since_start >= 0:
+            states[indices[name],hour_since_start:] = 1
 
 A = nx.to_numpy_matrix(G)
 np.save('adjacency', A.transpose())
