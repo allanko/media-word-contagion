@@ -25,3 +25,5 @@ with open('stories_mentioning_altright.csv', 'rt') as csvfile:
             states[indices[name],minute_since_start:] = 1
 
 A = nx.to_numpy_matrix(G)
+np.save('adjacency', A.transpose())
+np.save('states', states.transpose())
