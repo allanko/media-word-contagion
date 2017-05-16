@@ -11,7 +11,7 @@ import math
 
 SOURCES = 500
 
-TIME_STEPS = 168
+TIME_STEPS = 168 #int(20000 / 24)
 
 A = np.load('adjacency.npy')
 
@@ -27,7 +27,7 @@ A = np.load('adjacency.npy')
 # S[8] = [1,1,1,1,1,1,1,1,1,0]
 # S[9] = [1,1,1,1,1,1,1,1,1,1]
 
-S = np.load('states_clintonspeech.npy')
+S = np.load('states_nasty_debate.npy')#[::24,:]
 #plt.plot(np.sum(S, axis=1))
 
 #normalize by row ... WEIGHT A
@@ -46,24 +46,25 @@ print(1 - A_realsi)
 A_realsi = np.log(1 - A_realsi)
 print(A_realsi)
 
-p_exps = 40
+p_exps = 3
 
 final_score = np.zeros((p_exps))
 final_score_rand = np.zeros((p_exps))
 final_score_si = np.zeros((p_exps))
 
 for e in range(1, p_exps):
+    print(e)
     power = np.zeros((TIME_STEPS))
     power_rand = np.zeros((TIME_STEPS))
     power_si = np.zeros((TIME_STEPS))
-    p = 0.001 * e
+    p = 0.1 * e
 
     # try removing sources with no articles?
 
     for t in range(1, TIME_STEPS-2):
         #print('actual state', S[t])
 
-        prediction = p*(np.dot(A_weighted, S[t]))
+        prediction = p*(np.dot(A_importance_weighted, S[t]))
 
         dot_result = np.dot(A_realsi, S[t])
         dot_result[np.isnan(dot_result)] = float('-inf')
@@ -79,15 +80,19 @@ for e in range(1, p_exps):
         power[t] = np.sum(np.log(probabilities[np.nonzero(probabilities)]))
         power_rand[t] = np.sum(np.log(probabilities_rand[np.nonzero(probabilities_rand)]))
         power_si[t] = np.sum(np.log(probabilities_si[np.nonzero(probabilities_si)]))
+        if power[t] < -200:
+            print(t)
         #print(power[t])
         #print('probability correct prediction', probabilities)
+    plt.plot(power[1:-2])
+    plt.plot(power_si[1:-2])
     final_score[e] = np.sum(power[1:-2])
     final_score_rand[e] = np.sum(power_rand[1:-2])
     final_score_si[e] = np.sum(power_si[1:-2])
 
-plt.plot(final_score[1:])
-plt.plot(final_score_rand[1:])
-plt.plot(final_score_si[1:])
+#plt.plot(final_score[1:])
+#plt.plot(final_score_rand[1:])
+#plt.plot(final_score_si[1:])
 print(np.max(final_score[1:]))
 print(np.max(final_score_rand[1:]))
 print(np.max(final_score_si[1:]))

@@ -10,11 +10,11 @@ max_interval = 24 * 7
 
 states = np.zeros((500, max_interval))
 
-start_dt = datetime.datetime(2016, 8, 21, 0, 0, 0)
+start_dt = datetime.datetime(2016, 10, 19, 0, 0, 0)
 
 unfound = []
 node_list = []
-with open('stories_mentioning_altright.csv', 'rt') as csvfile:
+with open('stories_mentioning_nastywomen.csv', 'rt') as csvfile:
     reader = csv.reader(csvfile, delimiter=',', quotechar='\"')
     for row in reader:
         if row[5][0].isalpha():
@@ -35,4 +35,4 @@ with open('stories_mentioning_altright.csv', 'rt') as csvfile:
 
 A = nx.to_numpy_matrix(G)
 np.save('adjacency', A.transpose())
-np.save('states_clintonspeech', states.transpose())
+np.save('states_nasty_debate', states.transpose())
