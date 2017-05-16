@@ -35,6 +35,22 @@ def generate_S(weightedA, p):
         S[t+1] = np.ones(SOURCES)
         S[t+1][indToChange] = newS[indToChange]
 
+def generate_S_rand(weightedA, p):
+    S[0][0]=1
+    for t in range(TIME_STEPS-1):
+        newS = (np.random.uniform(size = SOURCES)<p)*1
+        indToChange = np.nonzero(1-S[t])
+        S[t+1] = np.ones(SOURCES)
+        S[t+1][indToChange] = newS[indToChange]
+               
+def predictivity_score_rand(weightedA, someS, p):
+    prediction_success = np.zeros((SOURCES))
+    for t in range(someS.shape[0]-1):
+        prediction_success = (1-someS[t])*(np.abs(p - (1 - someS[t+1])))
+        ll[t] = np.sum(np.log((prediction_success[np.nonzero(prediction_success)])))
+    plt.plot(ll)
+    plt.ylabel('log loss')
+    plt.show()
     
 def predictivity_score(weightedA, someS, p):
     prediction_success = np.zeros((SOURCES))
@@ -46,9 +62,9 @@ def predictivity_score(weightedA, someS, p):
     plt.ylabel('log loss')
     plt.show()
  
-generate_A(Aones)
-generate_S(A_w, .0001)
-predictivity_score(A_w, S, .0001)
+#generate_A(Aones)
+generate_S_rand(A_iw, .02)
+predictivity_score_rand(A_w, S, .7)
 plt.plot(np.sum(S, axis = 1))
 plt.ylabel('accumulation of S')
 plt.show()
